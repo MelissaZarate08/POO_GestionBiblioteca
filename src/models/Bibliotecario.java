@@ -1,50 +1,39 @@
 package models;
 
-import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Bibliotecario {
     private String nombre;
     private String contraseña;
+    private static Scanner scanner = new Scanner(System.in);
+    private static Inventario inventario = new Inventario();
 
     public Bibliotecario(String nombre, String contraseña) {
         this.nombre = nombre;
         this.contraseña = contraseña;
     }
 
-    public void agregarLibro(ArrayList<Libro> inventario, String titulo, String autor, int año) {
-        Libro libro = new Libro(titulo, autor, año);
-        inventario.add(libro);
-        System.out.println("Libro \"" + titulo + "\" ingresado al inventario.");
+    public void prestarLibro(Usuario usuario, String tituloLibro) {
+        inventario.prestarLibro(usuario, tituloLibro);
     }
 
-    public void prestarLibro(ArrayList<Libro> inventario, ArrayList<Prestamo> prestamos, Usuario usuario, String tituloLibro) {
-        for (Libro libro : inventario) {
-            if (libro.getTitulo().equals(tituloLibro) && !libro.estaPrestado()) {
-                libro.prestar();
-                prestamos.add(new Prestamo(usuario, libro));
-                System.out.println("El libro \"" + tituloLibro + "\" ha sido prestado a " + usuario.getNombre());
-                return;
-            }
-        }
-        System.out.println("El libro \"" + tituloLibro + "\" no está disponible para préstamo.");
+    public void devolverLibro(String tituloLibro) {
+        inventario.devolverLibro(tituloLibro);
     }
 
-    public void devolverLibro(ArrayList<Libro> inventario, ArrayList<Prestamo> prestamos, String tituloLibro) {
-        for (Prestamo prestamo : prestamos) {
-            if (prestamo.getLibro().getTitulo().equals(tituloLibro)) {
-                prestamo.getLibro().devolver();
-                prestamos.remove(prestamo);
-                System.out.println("El libro \"" + tituloLibro + "\" ha sido devuelto.");
-                return;
-            }
-        }
-        System.out.println("El libro \"" + tituloLibro + "\" no fue prestado.");
-    }
-    public void mostrarInventario(ArrayList<Libro> inventario){
-        System.out.println("Inventario de la biblioteca");
-        for (Libro libro : inventario) {
-            System.out.println(libro);
-        }
+    public void registrarPrestamo() {
+        Usuario usuario = obtenerDatosUsuario();
+        System.out.print("Ingrese el título del libro que desea prestar: ");
+        String tituloPrestamo = scanner.nextLine();
+        prestarLibro(usuario, tituloPrestamo);
     }
 
+
+    public static Usuario obtenerDatosUsuario() {
+        System.out.print("Ingrese nombre de usuario: ");
+        String nombreUsuario = scanner.nextLine();
+        System.out.print("Ingrese su dirección: ");
+        String direccionUsuario = scanner.nextLine();
+        return new Usuario(nombreUsuario, direccionUsuario);
+    }
 }

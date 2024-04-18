@@ -12,26 +12,28 @@ public class Libro {
         this.añoPublicacion = añoPublicacion;
         this.prestado = false;
     }
+
     public String getTitulo() {
         return titulo;
     }
+
     public boolean estaPrestado() {
         return prestado;
     }
+
     public void prestar() {
         prestado = true;
     }
+
     public void devolver() {
         prestado = false;
     }
+
+    @Override
     public String toString() {
-        return "Libro{" +
-                "titulo='" + titulo + '\'' +
-                ", autor='" + autor + '\'' +
-                ", añoPublicacion=" + añoPublicacion +
-                ", prestado=" + prestado +
-                '}';
+        return "Titulo='" + titulo + '\'' +
+                ", \nAutor='" + autor + '\'' +
+                ", \nAñoPublicacion=" + añoPublicacion +
+                ", \nPrestado=" + prestado;
     }
-
 }
-

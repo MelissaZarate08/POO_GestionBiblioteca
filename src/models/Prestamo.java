@@ -8,8 +8,10 @@ public class Prestamo {
         this.usuario = usuario;
         this.libro = libro;
     }
+
     public Libro getLibro() {
         return libro;
     }
-
 }
+
+

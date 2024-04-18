@@ -1,136 +1,103 @@
 import models.Bibliotecario;
-import models.Libro;
-import models.Prestamo;
-import models.Usuario;
+import models.Inventario;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class Main {
+    public static Scanner scanner = new Scanner(System.in);
+    public static Bibliotecario bibliotecario = new Bibliotecario("Bibliotecario", "1234");
+    public static Inventario inventario = new Inventario();
+
     public static void main(String[] args) {
-        ArrayList<Libro> inventario = new ArrayList<>();
-        ArrayList<Prestamo> prestamos = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("---INGRESO DE LIBROS AL INVENTARIO---");
-        while (true) {
-            System.out.print("Ingrese el título del libro (o (fin) para terminar): ");
-            String titulo = scanner.nextLine();
-            if (titulo.equalsIgnoreCase("fin")) {
-                break;
-            }
-            System.out.print("Ingrese el nombre del autor: ");
-            String autor = scanner.nextLine();
-            System.out.print("Ingrese el año de publicación: ");
-            int año = scanner.nextInt();
-            scanner.nextLine();
-            inventario.add(new Libro(titulo, autor, año));
-        }
-
         int rol;
         do {
-            System.out.println("\n---SELECCIONAR ROL DENTRO DE LA BIBLIOTECA---");
-            System.out.println("1. Usuario");
-            System.out.println("2. Bibliotecario");
-            System.out.println("3. Salir");
-            System.out.print("Ingrese su opción: ");
-            rol = scanner.nextInt();
-            scanner.nextLine();
+            rol = seleccionarRol();
 
             switch (rol) {
                 case 1:
-                    System.out.print("Ingrese su nombre de usuario: ");
-                    String nombreUsuario = scanner.nextLine();
-                    System.out.print("Ingrese su Direccion: ");
-                    String direccionUsuario = scanner.nextLine();
+                    System.out.println("\n---MENÚ USUARIO---");
+                    System.out.println("1. Ver libros que dispone la biblioteca");
+                    System.out.println("2. Volver al menú principal");
+                    System.out.print("Ingrese su opción: ");
+                    int opcion = scanner.nextInt();
+                    scanner.nextLine();
 
-                    Usuario usuario = new Usuario(nombreUsuario, direccionUsuario);
-
-                    System.out.println("Bienvenido!!, " + nombreUsuario);
-                    for (Libro libro : inventario) {
-                        System.out.println(libro);
-                    }
-                    System.out.print("\nIngrese el título del libro que desea prestar: ");
-                    String tituloPrestamo = scanner.nextLine();
-                    for (Libro libro : inventario) {
-                        if (libro.getTitulo().equals(tituloPrestamo)) {
-                            libro.prestar();
-                            prestamos.add(new Prestamo(usuario, libro));
-                            System.out.println("El libro \"" + tituloPrestamo + "\" ha sido prestado a " + usuario.getNombre());
+                    switch (opcion) {
+                        case 1:
+                            inventario.mostrarInventario();
                             break;
-                        }
+
+                        case 2:
+                            break;
+
+                        default:
+                            System.out.println("Opción inválida");
                     }
+
                     break;
 
                 case 2:
-                    System.out.print("Ingrese su nombre de bibliotecario: ");
-                    String nombreBibliotecario = scanner.nextLine();
-                    System.out.print("Ingrese su contraseña: ");
-                    String contraseñaBibliotecario = scanner.nextLine();
-
-                    Bibliotecario bibliotecario = new Bibliotecario(nombreBibliotecario, contraseñaBibliotecario);
-
-                    System.out.println("¡Bienvenido, " + nombreBibliotecario + "!\n");
-
-                    int opcion;
-                    do {
-                        System.out.println("Menú de opciones:");
-                        System.out.println("1. Agregar libro al inventario");
-                        System.out.println("2. Prestar libro");
-                        System.out.println("3. Devolver libro");
-                        System.out.println("4. Ver inventario");
-                        System.out.println("5. Cambiar de rol o salir");
-                        System.out.print("Ingrese su opción: ");
-                        opcion = scanner.nextInt();
-                        scanner.nextLine();
-
-                        switch (opcion) {
-                            case 1:
-                                System.out.println("Ingreso de libros al inventario:");
-                                System.out.print("Ingrese el título del libro: ");
-                                String tituloLibro = scanner.nextLine();
-                                System.out.print("Ingrese el nombre del autor: ");
-                                String autor = scanner.nextLine();
-                                System.out.print("Ingrese el año de publicación: ");
-                                int año = scanner.nextInt();
-                                scanner.nextLine();
-                                bibliotecario.agregarLibro(inventario, tituloLibro, autor, año);
-                                break;
-                            case 2:
-                                System.out.print("Ingrese su nombre de usuario: ");
-                                String nombreUsuarioPrestamo = scanner.nextLine();
-                                Usuario usuarioPrestamo = new Usuario(nombreUsuarioPrestamo, "");
-                                System.out.print("Ingrese el título del libro que desea prestar: ");
-                                tituloPrestamo = scanner.nextLine();
-                                bibliotecario.prestarLibro(inventario, prestamos, usuarioPrestamo, tituloPrestamo);
-                                break;
-
-                            case 3:
-                                System.out.print("Ingrese el título del libro que desea devolver: ");
-                                String tituloDevolucion = scanner.nextLine();
-                                bibliotecario.devolverLibro(inventario, prestamos, tituloDevolucion);
-                                break;
-                            case 4:
-                                bibliotecario.mostrarInventario(inventario);
-                                break;
-                            case 5:
-                                break;
-                            default:
-                                System.out.println("Opción inválida.");
-                        }
-                    } while (opcion != 5);
+                    bibliotecarioMenu();
                     break;
 
                 case 3:
-                    System.out.println("saliendo...");
+                    System.out.println("Saliendo...");
                     break;
 
                 default:
-                    System.out.println("Opción inválida. Por favor, ingrese un número del 1 al 3.");
+                    System.out.println("Opción inválida (ingrese un número del 1 al 3)");
             }
         } while (rol != 3);
 
         scanner.close();
+    }
+
+    private static int seleccionarRol() {
+        System.out.println("\n-----SELECCIONE SU ROL EN LA BIBLIOTECA-----");
+        System.out.println("1. Usuario");
+        System.out.println("2. Bibliotecario");
+        System.out.println("3. Salir");
+        System.out.print("Ingrese su opción: ");
+        return scanner.nextInt();
+    }
+
+    private static void bibliotecarioMenu() {
+        int opcion;
+        do {
+            System.out.println("\n-----MENÚ BIBLIOTECARIO-----");
+            System.out.println("1. Agregar Libro al Inventario");
+            System.out.println("2. Registrar Préstamo");
+            System.out.println("3. Registrar Devolución");
+            System.out.println("4. Ver Inventario");
+            System.out.println("5. Volver al Menú Principal");
+            System.out.print("Ingrese su opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    inventario.agregarLibroInventario();
+                    break;
+
+                case 2:
+                    bibliotecario.registrarPrestamo();
+                    break;
+
+                case 3:
+                    System.out.print("Ingrese el título del libro que desea devolver: ");
+                    String tituloDevolucion = scanner.nextLine();
+                    bibliotecario.devolverLibro(tituloDevolucion);
+                    break;
+                case 4:
+                    inventario.mostrarInventario();
+                    break;
+
+                case 5:
+                    break;
+
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        } while (opcion != 5);
     }
 }
